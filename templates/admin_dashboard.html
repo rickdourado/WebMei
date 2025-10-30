@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin — Vagas MEI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="{{ url_for('static', filename='images/logo_ciclocarioca.png') }}" alt="Ciclo Carioca" onerror="this.style.display='none'">
+                    <h1 class="logo-title">Oportunidades Cariocas — Admin MEI</h1>
+                </div>
+                <div class="nav-section">
+                    <a href="{{ url_for('index') }}" class="nav-link home-link" title="Página Inicial">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a class="btn" href="{{ url_for('vagas_public') }}">Vagas</a>
+                    <a class="btn" href="{{ url_for('admin_logout') }}">Sair</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-area">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+
+            <h2 style="margin-top:0;margin-bottom:16px">Vagas cadastradas</h2>
+
+            {% if vagas %}
+            <div class="form-section">
+                <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr 1fr; gap:12px">
+                    <div><strong>Título</strong></div>
+                    <div><strong>Tipo</strong></div>
+                    <div><strong>Bairro</strong></div>
+                    <div><strong>Ações</strong></div>
+                    {% for v in vagas %}
+                        <div>{{ v.titulo_servico }}</div>
+                        <div>{{ v.tipo_atividade }}</div>
+                        <div>{{ v.bairro }}</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <a class="btn" href="{{ url_for('vaga_view', filename=v.arquivo) }}">Ver</a>
+                            <a class="btn" href="{{ url_for('download_file', filename=v.arquivo) }}">CSV</a>
+                            <form method="post" action="{{ url_for('admin_delete', filename=v.arquivo) }}" onsubmit="return confirm('Excluir esta vaga?');">
+                                <button class="btn" type="submit">Excluir</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+                <div class="flash info">Nenhuma vaga cadastrada ainda.</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+
+

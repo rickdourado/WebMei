@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Serviço cadastrado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="{{ url_for('static', filename='images/logo_ciclocarioca.png') }}" alt="Ciclo Carioca" onerror="this.style.display='none'">
+                    <h1 class="logo-title">Oportunidades Cariocas — Serviços MEI</h1>
+                </div>
+                <div class="nav-section">
+                    <a href="{{ url_for('index') }}" class="nav-link home-link" title="Página Inicial">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a class="btn" href="{{ url_for('vagas_public') }}">Vagas</a>
+                    <a class="btn" href="{{ url_for('admin_dashboard') }}">Admin</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+        <h1>Serviço cadastrado com sucesso</h1>
+        <p>Confira os dados informados:</p>
+        <div class="card">
+            <ul>
+                <li><strong>Órgão Demandante:</strong> {{ data.orgao_demandante }}</li>
+                <li><strong>Título do serviço:</strong> {{ data.titulo_servico }}</li>
+                <li><strong>Tipo de atividade:</strong> {{ data.tipo_atividade or '—' }}</li>
+                <li><strong>Especificação da Atividade:</strong> {{ data.especificacao_atividade }}</li>
+                <li><strong>Descrição do Serviço:</strong> {{ data.descricao_servico }}</li>
+                <li><strong>Outras informações:</strong> {{ data.outras_informacoes or '—' }}</li>
+                <li><strong>Endereço:</strong> {{ data.endereco }}, {{ data.numero }} - {{ data.bairro }}</li>
+                <li><strong>Forma de pagamento:</strong> {{ data.forma_pagamento }}</li>
+                <li><strong>Prazo de pagamento:</strong> {{ data.prazo_pagamento }}</li>
+                <li><strong>Prazo de expiração:</strong> {{ data.prazo_expiracao }}</li>
+                <li><strong>Data limite de execução:</strong> {{ data.data_limite_execucao }}</li>
+            </ul>
+        </div>
+        <div class="form-actions">
+            <a href="{{ url_for('download_file', filename=csv_file) }}" class="btn">Baixar CSV</a>
+            <a href="{{ url_for('vagas_public') }}" class="btn">Ver vagas</a>
+            <a href="{{ url_for('index') }}" class="btn">Cadastrar outro serviço</a>
+        </div>
+        </div>
+    </div>
+
+<style>
+.card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px}
+ul{margin:0;padding-left:18px}
+.form-actions{margin-top:16px}
+</style>
+</body>
+</html>
+
+

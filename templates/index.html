@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cadastro de Serviços MEI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="{{ url_for('static', filename='images/logo_ciclocarioca.png') }}" alt="Ciclo Carioca" onerror="this.style.display='none'">
+                    <h1 class="logo-title">Oportunidades Cariocas — Cadastro de Serviços MEI</h1>
+                </div>
+                <div class="nav-section">
+                    <a href="{{ url_for('index') }}" class="nav-link home-link" title="Página Inicial">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a class="btn" href="{{ url_for('vagas_public') }}">Vagas</a>
+                    <a class="btn" href="{{ url_for('admin_dashboard') }}">Admin</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+        <h1 style="margin-top:0;margin-bottom:16px;display:none">Cadastro de Serviços MEI</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-area">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('create_service') }}" method="post" class="form-grid">
+            <div class="form-group">
+                <label for="orgao_demandante">Órgão Demandante *</label>
+                <input type="text" id="orgao_demandante" name="orgao_demandante" required>
+            </div>
+
+            <div class="form-group">
+                <label for="titulo_servico">Título do serviço *</label>
+                <input type="text" id="titulo_servico" name="titulo_servico" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_atividade">Tipo de atividade</label>
+                <select id="tipo_atividade" name="tipo_atividade">
+                    <option value="">Selecione...</option>
+                    {% for opt in tipo_atividade_opcoes %}
+                        <option value="{{ opt }}">{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="especificacao_atividade">Especificação da Atividade *</label>
+                <select id="especificacao_atividade" name="especificacao_atividade" required>
+                    <option value="">Selecione...</option>
+                    {% for opt in especificacao_atividade_opcoes %}
+                        <option value="{{ opt }}">{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group full">
+                <label for="descricao_servico">Descrição do Serviço *</label>
+                <textarea id="descricao_servico" name="descricao_servico" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group full">
+                <label for="outras_informacoes">Outras informações</label>
+                <textarea id="outras_informacoes" name="outras_informacoes" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco">Endereço *</label>
+                <input type="text" id="endereco" name="endereco" required>
+            </div>
+
+            <div class="form-group">
+                <label for="numero">Número *</label>
+                <input type="text" id="numero" name="numero" inputmode="numeric" pattern="\\d+" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bairro">Bairro *</label>
+                <input type="text" id="bairro" name="bairro" required>
+            </div>
+
+            <div class="form-group">
+                <label for="forma_pagamento">Forma de pagamento *</label>
+                <select id="forma_pagamento" name="forma_pagamento" required>
+                    <option value="">Selecione...</option>
+                    {% for opt in forma_pagamento_opcoes %}
+                        <option value="{{ opt }}">{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="prazo_pagamento">Prazo de pagamento *</label>
+                <input type="text" id="prazo_pagamento" name="prazo_pagamento" placeholder="Ex.: 30 dias" required>
+            </div>
+
+            <div class="form-group">
+                <label for="prazo_expiracao">Prazo para expiração da oportunidade* (DD/MM/AAAA)</label>
+                <input type="text" id="prazo_expiracao" name="prazo_expiracao" placeholder="DD/MM/AAAA" pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(\\d{4})$" required>
+            </div>
+
+            <div class="form-group">
+                <label for="data_limite_execucao">Data limite para execução do serviço *</label>
+                <input type="date" id="data_limite_execucao" name="data_limite_execucao" value="{{ today_iso }}" required>
+            </div>
+
+            <div class="form-actions full">
+                <button type="submit" class="btn">Cadastrar Serviço</button>
+            </div>
+        </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/form-validator.js') }}"></script>
+    <script>
+    (function(){
+        const mapping = {{ ocupacao_to_servicos|tojson }};
+        const tipoSel = document.getElementById('tipo_atividade');
+        const espSel = document.getElementById('especificacao_atividade');
+
+        function populateEspecificacoes(ocupacao){
+            const opts = mapping[ocupacao] || [];
+            espSel.innerHTML = '';
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'Selecione...';
+            espSel.appendChild(placeholder);
+            for(const s of opts){
+                const o = document.createElement('option');
+                o.value = s;
+                o.textContent = s;
+                espSel.appendChild(o);
+            }
+            espSel.disabled = opts.length === 0;
+        }
+
+        espSel.disabled = true;
+        tipoSel.addEventListener('change', function(){
+            populateEspecificacoes(this.value);
+        });
+    })();
+    </script>
+</body>
+<style>
+/* fallback mínimo caso CSS não carregue */
+body{font-family:system-ui, Arial, sans-serif;margin:0;padding:24px}
+</style>
+</html>
+
+

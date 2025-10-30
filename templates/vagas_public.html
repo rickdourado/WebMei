@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vagas MEI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="{{ url_for('static', filename='images/logo_ciclocarioca.png') }}" alt="Ciclo Carioca" onerror="this.style.display='none'">
+                    <h1 class="logo-title">Oportunidades Cariocas — Vagas MEI</h1>
+                </div>
+                <div class="nav-section">
+                    <a href="{{ url_for('index') }}" class="nav-link home-link" title="Página Inicial">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a class="btn" href="{{ url_for('vagas_public') }}">Vagas</a>
+                    <a class="btn" href="{{ url_for('admin_dashboard') }}">Admin</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <h2 style="margin-top:0;margin-bottom:16px">Vagas cadastradas</h2>
+            {% if vagas %}
+            <div class="form-section">
+                <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr 1fr; gap:12px">
+                    <div><strong>Título</strong></div>
+                    <div><strong>Tipo</strong></div>
+                    <div><strong>Bairro</strong></div>
+                    <div><strong>Ações</strong></div>
+                    {% for v in vagas %}
+                        <div>{{ v.titulo_servico }}</div>
+                        <div>{{ v.tipo_atividade }}</div>
+                        <div>{{ v.bairro }}</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <a class="btn" href="{{ url_for('vaga_view', filename=v.arquivo) }}">Ver</a>
+                            <a class="btn" href="{{ url_for('download_file', filename=v.arquivo) }}">CSV</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+                <div class="flash info">Nenhuma vaga cadastrada ainda.</div>
+            {% endif %}
+            <div class="form-actions" style="justify-content:flex-start">
+                <a class="btn" href="{{ url_for('index') }}">Cadastrar nova vaga</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

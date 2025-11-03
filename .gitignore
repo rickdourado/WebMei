@@ -1,0 +1,44 @@
+# Arquivos de configuração sensíveis
+.env
+.env.local
+.env.production
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Ambiente virtual
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Banco de dados local
+*.db
+*.sqlite3
+
+# Arquivos de migração temporários
+migration/
+
+# Arquivos CSV gerados
+CSV/*.csv
+
+# Backup de banco
+*.sql
+*.dump
+
+# OS
+.DS_Store
+Thumbs.db

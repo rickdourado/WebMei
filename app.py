@@ -1,13 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory, session
+from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
 import os
 import csv
+import bcrypt as bcrypt_lib
+from dotenv import load_dotenv
+from database import DatabaseManager
+
+# Carrega variáveis de ambiente
+load_dotenv()
 
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
+
+# Configuração CSRF
+csrf = CSRFProtect(app)
+
+# Inicializa gerenciador de banco de dados
+db_manager = DatabaseManager()
+
+# Configurações de admin (fallback para desenvolvimento)
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'admin')
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin')
+ADMIN_PASSWORD_HASH = os.getenv('ADMIN_PASSWORD_HASH', None)
 
 # Diretório para CSVs
 BASE_DIR = os.path.dirname(__file__)
@@ -186,6 +202,35 @@ def vaga_view(filename):
 # -----------------------------
 # Admin: login/logout/dashboard
 # -----------------------------
+def verify_admin_password(username, password):
+    """
+    Verifica credenciais do admin usando banco de dados ou fallback
+    
+    Args:
+        username (str): Nome de usuário
+        password (str): Senha
+        
+    Returns:
+        dict: Dados do usuário se autenticado, None caso contrário
+    """
+    # Primeira tentativa: autenticação via banco de dados
+    user = db_manager.authenticate_user(username, password)
+    if user:
+        return user
+    
+    # Fallback: autenticação via .env (apenas desenvolvimento)
+    if username == ADMIN_USERNAME:
+        if ADMIN_PASSWORD_HASH:
+            try:
+                if bcrypt_lib.checkpw(password.encode('utf-8'), ADMIN_PASSWORD_HASH.encode('utf-8')):
+                    return {'id': 0, 'login': username}
+            except Exception:
+                pass
+        elif password == ADMIN_PASSWORD:
+            return {'id': 0, 'login': username}
+    
+    return None
+
 def login_required(view_func):
     from functools import wraps
     @wraps(view_func)
@@ -199,14 +244,28 @@ def login_required(view_func):
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        username = request.form.get('username','')
+        username = request.form.get('username','').strip()
         password = request.form.get('password','')
-        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        
+        # Valida campos obrigatórios
+        if not username or not password:
+            flash('Usuário e senha são obrigatórios.', 'error')
+            return redirect(url_for('admin_login'))
+        
+        # Autentica usuário
+        user = verify_admin_password(username, password)
+        if user:
             session['logged_in'] = True
-            flash('Login realizado com sucesso!', 'success')
+            session['user_id'] = user['id']
+            session['username'] = user['login']
+            session.permanent = True
+            
+            flash(f'Login realizado com sucesso! Bem-vindo, {user["login"]}', 'success')
             return redirect(url_for('admin_dashboard'))
+        
         flash('Credenciais inválidas.', 'error')
         return redirect(url_for('admin_login'))
+    
     return render_template('admin_login.html')
 
 @app.route('/admin/logout')

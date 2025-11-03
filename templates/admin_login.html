@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,12 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <div class="container">
         <header class="header">
             <div class="header-content">
                 <div class="logo-section">
-                    <img src="{{ url_for('static', filename='images/logo_ciclocarioca.png') }}" alt="Ciclo Carioca" onerror="this.style.display='none'">
+                    <img src="{{ url_for('static', filename='images/logo_ciclocarioca.png') }}" alt="Ciclo Carioca"
+                        onerror="this.style.display='none'">
                     <h1 class="logo-title">Oportunidades Cariocas — Admin MEI</h1>
                 </div>
                 <div class="nav-section">
@@ -28,16 +31,17 @@
         <div class="main-content">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="flash-area">
-                    {% for category, message in messages %}
-                        <div class="flash {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
+            <div class="flash-area">
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
             {% endif %}
             {% endwith %}
 
             <h2 style="margin-top:0">Login</h2>
             <form method="post" class="form-grid" style="max-width:420px">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <div class="form-group full">
                     <label for="username">Usuário</label>
                     <input id="username" name="username" type="text" required>
@@ -53,6 +57,5 @@
         </div>
     </div>
 </body>
+
 </html>
-
-

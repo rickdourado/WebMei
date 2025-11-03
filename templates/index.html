@@ -40,6 +40,7 @@
         {% endwith %}
 
         <form action="{{ url_for('create_service') }}" method="post" class="form-grid">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label for="orgao_demandante">Órgão Demandante *</label>
                 <input type="text" id="orgao_demandante" name="orgao_demandante" required>

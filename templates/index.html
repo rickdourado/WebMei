@@ -43,7 +43,13 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label for="orgao_demandante">Órgão Demandante *</label>
-                <input type="text" id="orgao_demandante" name="orgao_demandante" required>
+                <select id="orgao_demandante" name="orgao_demandante" required>
+                    <option value="">Selecione o órgão...</option>
+                    {% for orgao in orgaos_opcoes %}
+                        <option value="{{ orgao }}">{{ orgao }}</option>
+                    {% endfor %}
+                </select>
+                <small style="color: #666; font-size: 0.85em;">Selecione o órgão da lista</small>
             </div>
 
             <div class="form-group">

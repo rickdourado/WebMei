@@ -72,6 +72,32 @@ def load_ocupacao_to_servicos(csv_path):
 
 OCUPACAO_TO_SERVICOS = load_ocupacao_to_servicos(OCUPACAO_CSV)
 
+# Carregar lista de órgãos do CSV
+def load_orgaos():
+    """
+    Carrega lista de órgãos do arquivo lista_orgaos.csv
+    Retorna apenas a coluna 'orgao' ordenada alfabeticamente
+    """
+    orgaos = []
+    try:
+        orgaos_csv = os.path.join(os.path.dirname(__file__), 'refs', 'lista_orgaos.csv')
+        with open(orgaos_csv, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                orgao = (row.get('orgao') or '').strip()
+                if orgao:
+                    orgaos.append(orgao)
+        # Ordena alfabeticamente
+        orgaos.sort()
+    except FileNotFoundError:
+        print("⚠ Arquivo lista_orgaos.csv não encontrado")
+    except Exception as e:
+        print(f"⚠ Erro ao carregar órgãos: {e}")
+    
+    return orgaos
+
+ORGAOS_OPCOES = load_orgaos()
+
 
 @app.route('/')
 def index():
@@ -79,6 +105,7 @@ def index():
     return render_template(
         'index.html',
         today_iso=today_iso,
+        orgaos_opcoes=ORGAOS_OPCOES,
         tipo_atividade_opcoes=TIPO_ATIVIDADE_OPCOES,
         especificacao_atividade_opcoes=['Teste 1', 'Teste 2'],
         forma_pagamento_opcoes=['Cheque', 'Dinheiro', 'Cartão', 'Transferência'],

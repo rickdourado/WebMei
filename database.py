@@ -128,3 +128,57 @@ class DatabaseManager:
         finally:
             if 'connection' in locals():
                 connection.close()
+    
+    def insert_servico(self, data):
+        """
+        Insere um novo serviço na tabela servicos_mei
+        
+        Args:
+            data (dict): Dicionário com os dados do serviço
+                - orgao_demandante (str)
+                - titulo_servico (str)
+                - tipo_atividade (str, opcional)
+                - especificacao_atividade (str)
+                - descricao_servico (str)
+                - outras_informacoes (str, opcional)
+                - endereco (str)
+                - numero (str)
+                - bairro (str)
+                - forma_pagamento (str)
+                - prazo_pagamento (str)
+                - prazo_expiracao (str, formato YYYY-MM-DD)
+                - data_limite_execucao (str, formato YYYY-MM-DD)
+                - arquivo_csv (str, opcional)
+                
+        Returns:
+            int: ID do serviço inserido ou None em caso de erro
+        """
+        try:
+            connection = self.get_connection()
+            
+            with connection.cursor() as cursor:
+                sql = """
+                    INSERT INTO servicos_mei (
+                        orgao_demandante, titulo_servico, tipo_atividade, 
+                        especificacao_atividade, descricao_servico, outras_informacoes,
+                        endereco, numero, bairro, forma_pagamento, prazo_pagamento,
+                        prazo_expiracao, data_limite_execucao
+                    ) VALUES (
+                        %(orgao_demandante)s, %(titulo_servico)s, %(tipo_atividade)s,
+                        %(especificacao_atividade)s, %(descricao_servico)s, %(outras_informacoes)s,
+                        %(endereco)s, %(numero)s, %(bairro)s, %(forma_pagamento)s, %(prazo_pagamento)s,
+                        %(prazo_expiracao)s, %(data_limite_execucao)s
+                    )
+                """
+                
+                cursor.execute(sql, data)
+                connection.commit()
+                
+                return cursor.lastrowid
+                
+        except Exception as e:
+            print(f"Erro ao inserir serviço no banco de dados: {e}")
+            return None
+        finally:
+            if 'connection' in locals():
+                connection.close()

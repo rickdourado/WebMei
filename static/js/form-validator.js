@@ -1,27 +1,23 @@
+/**
+ * Validador de formulário - Portal Empreendedor
+ * 
+ * NOTA: As validações principais são feitas pelo HTML5 (required, type="date", pattern)
+ * Este arquivo pode ser usado para validações customizadas adicionais no futuro
+ */
+
 (function(){
   const form = document.querySelector('form');
   if(!form) return;
 
+  // Validações customizadas podem ser adicionadas aqui
+  // Atualmente, o HTML5 já faz as validações necessárias:
+  // - input type="date" valida formato de data automaticamente
+  // - pattern no campo número valida números ou S/N
+  // - required valida campos obrigatórios
+  
   form.addEventListener('submit', function(e){
-    const prazoExp = document.getElementById('prazo_expiracao');
-    const numero = document.getElementById('numero');
-    const erros = [];
-
-    if(prazoExp && prazoExp.value){
-      const re = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/(\d{4})$/;
-      if(!re.test(prazoExp.value)){
-        erros.push('Prazo para expiração precisa estar no formato DD/MM/AAAA.');
-      }
-    }
-
-    if(numero && numero.value && !/^\d+$/.test(numero.value)){
-      erros.push('Número deve conter apenas dígitos.');
-    }
-
-    if(erros.length){
-      e.preventDefault();
-      alert(erros.join('\n'));
-    }
+    // Validações adicionais podem ser adicionadas aqui se necessário
+    // Por enquanto, deixamos o HTML5 fazer o trabalho
   });
 })();
 

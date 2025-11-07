@@ -27,7 +27,6 @@ CREATE TABLE servicos_mei (
     prazo_pagamento VARCHAR(100) NOT NULL COMMENT 'Prazo para pagamento (ex: 30 dias)',
     prazo_expiracao DATE NOT NULL COMMENT 'Data de expiração da oportunidade',
     data_limite_execucao DATE NOT NULL COMMENT 'Data limite para execução do serviço',
-    arquivo_csv VARCHAR(255) NULL COMMENT 'Nome do arquivo CSV original (para compatibilidade)',
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Data de criação do registro',
     data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Data da última atualização',
     ativo BOOLEAN DEFAULT TRUE COMMENT 'Indica se o serviço está ativo/disponível',

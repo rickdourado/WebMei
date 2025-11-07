@@ -101,7 +101,7 @@ def create_service():
         'bairro': request.form.get('bairro', '').strip(),
         'forma_pagamento': request.form.get('forma_pagamento', '').strip(),
         'prazo_pagamento': request.form.get('prazo_pagamento', '').strip(),
-        'prazo_expiracao': request.form.get('prazo_expiracao', '').strip(),  # DD/MM/AAAA
+        'prazo_expiracao': request.form.get('prazo_expiracao', '').strip(),  # YYYY-MM-DD
         'data_limite_execucao': request.form.get('data_limite_execucao', '').strip(),  # YYYY-MM-DD
     }
 
@@ -125,9 +125,12 @@ def create_service():
         if not data.get(key):
             erros.append(f'{label} é obrigatório.')
 
-    # Número precisa ser numérico
-    if data.get('numero') and not data['numero'].isdigit():
-        erros.append('Número deve conter apenas dígitos.')
+    # Número pode ser numérico ou S/N
+    if data.get('numero'):
+        numero_limpo = data['numero'].strip().upper()
+        # Aceita números puros ou variações de "sem número"
+        if not (numero_limpo.isdigit() or numero_limpo in ['S/N', 'SN', 'S.N.', 'SEM NUMERO', 'SEM NÚMERO']):
+            erros.append('Número deve conter apenas dígitos ou "S/N" para endereços sem número.')
 
     if erros:
         for e in erros:
@@ -154,6 +157,24 @@ def create_service():
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
         writer.writerow(data)
+
+    # Persistência no banco de dados MySQL
+    try:
+        # prazo_expiracao já vem no formato YYYY-MM-DD do input type="date"
+        # Não precisa conversão
+        db_data = data.copy()
+        
+        # Insere no banco
+        service_id = db_manager.insert_servico(db_data)
+        
+        if service_id:
+            print(f"✓ Serviço inserido no banco de dados com ID: {service_id}")
+        else:
+            print("⚠ Aviso: Serviço não foi salvo no banco de dados")
+            
+    except Exception as e:
+        print(f"✗ Erro ao salvar no banco de dados: {e}")
+        # Não interrompe o fluxo - CSV já foi salvo
 
     flash('Serviço cadastrado com sucesso!', 'success')
     return render_template('service_success.html', data=data, csv_file=filename)

@@ -62,8 +62,9 @@ nav {
 }
 
 nav a, nav button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 10px 16px;
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -75,6 +76,8 @@ nav a, nav button {
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
+  line-height: 1;
+  min-height: 40px;
 }
 
 nav a:hover, nav button:hover {
@@ -84,11 +87,12 @@ nav a:hover, nav button:hover {
 }
 
 .home-link {
-  margin-right: 10px;
+  padding: 10px 12px;
 }
 
 .home-link i {
-  font-size: 18px;
+  font-size: 16px;
+  margin: 0;
 }
 
 main {

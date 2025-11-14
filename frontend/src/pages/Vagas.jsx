@@ -1,0 +1,59 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { apiService } from '../services/api';
+
+function Vagas() {
+  const [vagas, setVagas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadVagas();
+  }, []);
+
+  const loadVagas = async () => {
+    try {
+      const response = await apiService.getServicos();
+      setVagas(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar vagas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <div className="loading">Carregando vagas...</div>;
+
+  return (
+    <div className="container">
+      <header>
+        <h1>Oportunidades Disponíveis</h1>
+        <nav>
+          <Link to="/">Cadastrar Nova</Link>
+          <Link to="/admin/login">Admin</Link>
+        </nav>
+      </header>
+
+      <main>
+        <div className="vagas-grid">
+          {vagas.length === 0 ? (
+            <p>Nenhuma vaga cadastrada ainda.</p>
+          ) : (
+            vagas.map(vaga => (
+              <div key={vaga.arquivo} className="vaga-card">
+                <h3>{vaga.titulo_servico}</h3>
+                <p><strong>Tipo:</strong> {vaga.tipo_atividade}</p>
+                <p><strong>Bairro:</strong> {vaga.bairro}</p>
+                <p><strong>Expira em:</strong> {vaga.prazo_expiracao}</p>
+                <Link to={`/vaga/${vaga.arquivo}`} className="btn-detalhes">
+                  Ver Detalhes
+                </Link>
+              </div>
+            ))
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default Vagas;

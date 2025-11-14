@@ -1,0 +1,15 @@
+Campos:
+
+Órgão Demantante (obrigatório) (campo livre);
+Título do serviço (obrigatório) (Campo livre);
+Tipo de atividade (dropdown); (Coloque teste 1 e teste 2 por enquanto);
+Especificação da Atividad (obrigatório) (dropdown) (coloque também teste 1 e teste 2 por enquanto);
+Descrição do Serviço (obrigatório) (campo livre);
+Outras informações (não obrigatório) (campo livre);
+Endereço (obrigatório) (campo livre);
+Número (obrigatório) (campo númerico);
+Bairro (obrigatório) (campo livre textual);
+Forma de pagamento (obrigatório) (dropdown) (opções: Cheque, Dinheiro, Cartão, Transferência);
+Prazo de pagamento (obrigatório) (campo textual livre);
+Prazo para expiração da oportunidade* (obrigatório) (campo de data, formato DD/MM/AAAA);
+Data 

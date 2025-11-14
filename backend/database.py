@@ -182,3 +182,169 @@ class DatabaseManager:
         finally:
             if 'connection' in locals():
                 connection.close()
+    
+    def list_servicos(self, limit=None, offset=0):
+        """
+        Lista todos os serviços cadastrados
+        
+        Args:
+            limit (int, opcional): Número máximo de registros
+            offset (int, opcional): Offset para paginação
+            
+        Returns:
+            list: Lista de serviços
+        """
+        try:
+            connection = self.get_connection()
+            
+            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = """
+                    SELECT 
+                        id, orgao_demandante, titulo_servico, tipo_atividade,
+                        especificacao_atividade, descricao_servico, outras_informacoes,
+                        endereco, numero, bairro, forma_pagamento, prazo_pagamento,
+                        prazo_expiracao, data_limite_execucao, data_cadastro
+                    FROM servicos_mei
+                    ORDER BY data_cadastro DESC
+                """
+                
+                if limit:
+                    sql += f" LIMIT {int(limit)} OFFSET {int(offset)}"
+                
+                cursor.execute(sql)
+                return cursor.fetchall()
+                
+        except Exception as e:
+            print(f"Erro ao listar serviços: {e}")
+            return []
+        finally:
+            if 'connection' in locals():
+                connection.close()
+    
+    def get_servico_by_id(self, servico_id):
+        """
+        Busca um serviço específico por ID
+        
+        Args:
+            servico_id (int): ID do serviço
+            
+        Returns:
+            dict: Dados do serviço ou None se não encontrado
+        """
+        try:
+            connection = self.get_connection()
+            
+            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = """
+                    SELECT 
+                        id, orgao_demandante, titulo_servico, tipo_atividade,
+                        especificacao_atividade, descricao_servico, outras_informacoes,
+                        endereco, numero, bairro, forma_pagamento, prazo_pagamento,
+                        prazo_expiracao, data_limite_execucao, data_cadastro
+                    FROM servicos_mei
+                    WHERE id = %s
+                """
+                
+                cursor.execute(sql, (servico_id,))
+                return cursor.fetchone()
+                
+        except Exception as e:
+            print(f"Erro ao buscar serviço: {e}")
+            return None
+        finally:
+            if 'connection' in locals():
+                connection.close()
+    
+    def delete_servico(self, servico_id):
+        """
+        Deleta um serviço do banco de dados
+        
+        Args:
+            servico_id (int): ID do serviço
+            
+        Returns:
+            bool: True se deletado com sucesso
+        """
+        try:
+            connection = self.get_connection()
+            
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM servicos_mei WHERE id = %s", (servico_id,))
+                connection.commit()
+                
+                return cursor.rowcount > 0
+                
+        except Exception as e:
+            print(f"Erro ao deletar serviço: {e}")
+            return False
+        finally:
+            if 'connection' in locals():
+                connection.close()
+    
+    def update_servico(self, servico_id, data):
+        """
+        Atualiza um serviço existente
+        
+        Args:
+            servico_id (int): ID do serviço
+            data (dict): Dicionário com os dados a atualizar
+            
+        Returns:
+            bool: True se atualizado com sucesso
+        """
+        try:
+            connection = self.get_connection()
+            
+            with connection.cursor() as cursor:
+                sql = """
+                    UPDATE servicos_mei SET
+                        orgao_demandante = %(orgao_demandante)s,
+                        titulo_servico = %(titulo_servico)s,
+                        tipo_atividade = %(tipo_atividade)s,
+                        especificacao_atividade = %(especificacao_atividade)s,
+                        descricao_servico = %(descricao_servico)s,
+                        outras_informacoes = %(outras_informacoes)s,
+                        endereco = %(endereco)s,
+                        numero = %(numero)s,
+                        bairro = %(bairro)s,
+                        forma_pagamento = %(forma_pagamento)s,
+                        prazo_pagamento = %(prazo_pagamento)s,
+                        prazo_expiracao = %(prazo_expiracao)s,
+                        data_limite_execucao = %(data_limite_execucao)s
+                    WHERE id = %(id)s
+                """
+                
+                data['id'] = servico_id
+                cursor.execute(sql, data)
+                connection.commit()
+                
+                return cursor.rowcount > 0
+                
+        except Exception as e:
+            print(f"Erro ao atualizar serviço: {e}")
+            return False
+        finally:
+            if 'connection' in locals():
+                connection.close()
+    
+    def count_servicos(self):
+        """
+        Conta o total de serviços cadastrados
+        
+        Returns:
+            int: Número total de serviços
+        """
+        try:
+            connection = self.get_connection()
+            
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT COUNT(*) as total FROM servicos_mei")
+                result = cursor.fetchone()
+                return result[0] if result else 0
+                
+        except Exception as e:
+            print(f"Erro ao contar serviços: {e}")
+            return 0
+        finally:
+            if 'connection' in locals():
+                connection.close()

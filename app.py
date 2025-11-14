@@ -164,88 +164,91 @@ def create_service():
             flash(e, 'error')
         return redirect(url_for('index'))
 
-    # Persistência em CSV
-    def safe_slug(texto: str) -> str:
-        permitidos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-        texto = texto.replace(' ', '_')
-        return ''.join(ch for ch in texto if ch in permitidos)[:80] or 'vaga'
-
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    slug = safe_slug(data['titulo_servico'])
-    filename = f"{slug}_{timestamp}.csv"
-    filepath = os.path.join(CSV_DIR, filename)
-
-    headers = [
-        'orgao_demandante','titulo_servico','tipo_atividade','especificacao_atividade',
-        'descricao_servico','outras_informacoes','endereco','numero','bairro',
-        'forma_pagamento','prazo_pagamento','prazo_expiracao','data_limite_execucao'
-    ]
-    with open(filepath, 'w', encoding='utf-8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=headers)
-        writer.writeheader()
-        writer.writerow(data)
-
     # Persistência no banco de dados MySQL
     try:
-        # prazo_expiracao já vem no formato YYYY-MM-DD do input type="date"
-        # Não precisa conversão
-        db_data = data.copy()
-        
         # Insere no banco
-        service_id = db_manager.insert_servico(db_data)
+        service_id = db_manager.insert_servico(data)
         
         if service_id:
             print(f"✓ Serviço inserido no banco de dados com ID: {service_id}")
+            flash('Serviço cadastrado com sucesso!', 'success')
+            return render_template('service_success.html', data=data, service_id=service_id)
         else:
-            print("⚠ Aviso: Serviço não foi salvo no banco de dados")
+            flash('Erro ao salvar serviço no banco de dados.', 'error')
+            return redirect(url_for('index'))
             
     except Exception as e:
         print(f"✗ Erro ao salvar no banco de dados: {e}")
-        # Não interrompe o fluxo - CSV já foi salvo
-
-    flash('Serviço cadastrado com sucesso!', 'success')
-    return render_template('service_success.html', data=data, csv_file=filename)
+        flash(f'Erro ao salvar serviço: {str(e)}', 'error')
+        return redirect(url_for('index'))
 
 
-# Download de CSV gerado
-@app.route('/download/<path:filename>')
-def download_file(filename):
-    return send_from_directory(CSV_DIR, filename, as_attachment=True)
+# Download/Export de serviço como CSV
+@app.route('/download/<int:servico_id>')
+def download_file(servico_id):
+    try:
+        servico = db_manager.get_servico_by_id(servico_id)
+        
+        if not servico:
+            flash('Serviço não encontrado.', 'error')
+            return redirect(url_for('vagas_public'))
+        
+        # Cria CSV temporário
+        def safe_slug(texto: str) -> str:
+            permitidos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
+            texto = texto.replace(' ', '_')
+            return ''.join(ch for ch in texto if ch in permitidos)[:80] or 'vaga'
+        
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        slug = safe_slug(servico['titulo_servico'])
+        filename = f"{slug}_{timestamp}.csv"
+        filepath = os.path.join(CSV_DIR, filename)
+        
+        # Garante que o diretório existe
+        os.makedirs(CSV_DIR, exist_ok=True)
+        
+        headers = [
+            'orgao_demandante','titulo_servico','tipo_atividade','especificacao_atividade',
+            'descricao_servico','outras_informacoes','endereco','numero','bairro',
+            'forma_pagamento','prazo_pagamento','prazo_expiracao','data_limite_execucao'
+        ]
+        
+        with open(filepath, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=headers)
+            writer.writeheader()
+            writer.writerow({k: servico.get(k, '') for k in headers})
+        
+        return send_from_directory(CSV_DIR, filename, as_attachment=True)
+        
+    except Exception as e:
+        flash(f'Erro ao gerar CSV: {str(e)}', 'error')
+        return redirect(url_for('vagas_public'))
 
 # Listagem pública de vagas
 @app.route('/vagas')
 def vagas_public():
-    vagas = []
-    for name in sorted(os.listdir(CSV_DIR)):
-        if not name.lower().endswith('.csv'):
-            continue
-        try:
-            with open(os.path.join(CSV_DIR, name), 'r', encoding='utf-8') as f:
-                r = csv.DictReader(f)
-                row = next(r, None)
-                if row:
-                    vagas.append({
-                        'arquivo': name,
-                        'titulo_servico': row.get('titulo_servico',''),
-                        'tipo_atividade': row.get('tipo_atividade',''),
-                        'bairro': row.get('bairro',''),
-                        'prazo_expiracao': row.get('prazo_expiracao',''),
-                    })
-        except Exception:
-            continue
-    return render_template('vagas_public.html', vagas=vagas)
+    try:
+        vagas = db_manager.list_servicos()
+        return render_template('vagas_public.html', vagas=vagas)
+    except Exception as e:
+        flash(f'Erro ao carregar vagas: {str(e)}', 'error')
+        return render_template('vagas_public.html', vagas=[])
 
 # Visualização de vaga individual
-@app.route('/vaga/<path:filename>')
-def vaga_view(filename):
-    path = os.path.join(CSV_DIR, filename)
-    if not os.path.isfile(path):
-        flash('Vaga não encontrada.', 'error')
+@app.route('/vaga/<int:servico_id>')
+def vaga_view(servico_id):
+    try:
+        servico = db_manager.get_servico_by_id(servico_id)
+        
+        if not servico:
+            flash('Vaga não encontrada.', 'error')
+            return redirect(url_for('vagas_public'))
+        
+        return render_template('vaga_view.html', data=servico, servico_id=servico_id)
+        
+    except Exception as e:
+        flash(f'Erro ao carregar vaga: {str(e)}', 'error')
         return redirect(url_for('vagas_public'))
-    with open(path, 'r', encoding='utf-8') as f:
-        r = csv.DictReader(f)
-        data = next(r, None) or {}
-    return render_template('vaga_view.html', data=data, csv_file=filename)
 
 # -----------------------------
 # Admin: login/logout/dashboard
@@ -325,38 +328,28 @@ def admin_logout():
 @app.route('/admin')
 @login_required
 def admin_dashboard():
-    vagas = []
-    for name in sorted(os.listdir(CSV_DIR)):
-        if not name.lower().endswith('.csv'):
-            continue
-        try:
-            with open(os.path.join(CSV_DIR, name), 'r', encoding='utf-8') as f:
-                r = csv.DictReader(f)
-                row = next(r, None)
-                if row:
-                    vagas.append({
-                        'arquivo': name,
-                        'titulo_servico': row.get('titulo_servico',''),
-                        'tipo_atividade': row.get('tipo_atividade',''),
-                        'bairro': row.get('bairro',''),
-                        'prazo_expiracao': row.get('prazo_expiracao',''),
-                    })
-        except Exception:
-            continue
-    return render_template('admin_dashboard.html', vagas=vagas)
+    try:
+        vagas = db_manager.list_servicos()
+        total = db_manager.count_servicos()
+        return render_template('admin_dashboard.html', vagas=vagas, total=total)
+    except Exception as e:
+        flash(f'Erro ao carregar dashboard: {str(e)}', 'error')
+        return render_template('admin_dashboard.html', vagas=[], total=0)
 
-@app.route('/admin/delete/<path:filename>', methods=['POST'])
+@app.route('/admin/delete/<int:servico_id>', methods=['POST'])
 @login_required
-def admin_delete(filename):
-    path = os.path.join(CSV_DIR, filename)
-    if os.path.isfile(path):
-        try:
-            os.remove(path)
+def admin_delete(servico_id):
+    try:
+        success = db_manager.delete_servico(servico_id)
+        
+        if success:
             flash('Vaga excluída com sucesso.', 'success')
-        except Exception as e:
-            flash(f'Erro ao excluir vaga: {e}', 'error')
-    else:
-        flash('Arquivo não encontrado.', 'error')
+        else:
+            flash('Vaga não encontrada.', 'error')
+            
+    except Exception as e:
+        flash(f'Erro ao excluir vaga: {str(e)}', 'error')
+    
     return redirect(url_for('admin_dashboard'))
 
 

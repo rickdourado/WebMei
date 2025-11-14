@@ -125,17 +125,19 @@ def index():
     """Rota raiz - informações da API"""
     return jsonify({
         'name': 'Portal Empreendedor API',
-        'version': '1.0.0',
+        'version': '2.0.0',
         'status': 'online',
+        'database': 'MySQL' if db_manager else 'Indisponível',
         'endpoints': {
             'config': '/api/config',
-            'servicos': '/api/servicos',
-            'servico': '/api/servicos/<filename>',
-            'download': '/api/download/<filename>',
-            'login': '/api/auth/login',
-            'logout': '/api/auth/logout',
-            'check_auth': '/api/auth/check',
-            'delete': '/api/admin/servicos/<filename>'
+            'list_servicos': 'GET /api/servicos',
+            'get_servico': 'GET /api/servicos/<id>',
+            'create_servico': 'POST /api/servicos',
+            'export_csv': 'GET /api/servicos/<id>/export',
+            'login': 'POST /api/auth/login',
+            'logout': 'POST /api/auth/logout',
+            'check_auth': 'GET /api/auth/check',
+            'delete_servico': 'DELETE /api/admin/servicos/<id>'
         }
     })
 
@@ -153,44 +155,55 @@ def get_config():
 @app.route('/api/servicos', methods=['GET'])
 def list_servicos():
     """Lista todos os serviços cadastrados"""
-    vagas = []
-    for name in sorted(os.listdir(CSV_DIR)):
-        if not name.lower().endswith('.csv'):
-            continue
-        try:
-            with open(os.path.join(CSV_DIR, name), 'r', encoding='utf-8') as f:
-                r = csv.DictReader(f)
-                row = next(r, None)
-                if row:
-                    vagas.append({
-                        'arquivo': name,
-                        'titulo_servico': row.get('titulo_servico', ''),
-                        'tipo_atividade': row.get('tipo_atividade', ''),
-                        'bairro': row.get('bairro', ''),
-                        'prazo_expiracao': row.get('prazo_expiracao', ''),
-                    })
-        except Exception:
-            continue
-    return jsonify(vagas)
-
-@app.route('/api/servicos/<path:filename>', methods=['GET'])
-def get_servico(filename):
-    """Retorna detalhes de um serviço específico"""
-    path = os.path.join(CSV_DIR, filename)
-    if not os.path.isfile(path):
-        return jsonify({'error': 'Serviço não encontrado'}), 404
+    if not db_manager:
+        return jsonify({'error': 'Banco de dados não disponível'}), 500
     
     try:
-        with open(path, 'r', encoding='utf-8') as f:
-            r = csv.DictReader(f)
-            data = next(r, None) or {}
-        return jsonify(data)
+        servicos = db_manager.list_servicos()
+        
+        # Formata datas para string
+        for servico in servicos:
+            if servico.get('prazo_expiracao'):
+                servico['prazo_expiracao'] = str(servico['prazo_expiracao'])
+            if servico.get('data_limite_execucao'):
+                servico['data_limite_execucao'] = str(servico['data_limite_execucao'])
+            if servico.get('data_cadastro'):
+                servico['data_cadastro'] = str(servico['data_cadastro'])
+        
+        return jsonify(servicos)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/servicos/<int:servico_id>', methods=['GET'])
+def get_servico(servico_id):
+    """Retorna detalhes de um serviço específico"""
+    if not db_manager:
+        return jsonify({'error': 'Banco de dados não disponível'}), 500
+    
+    try:
+        servico = db_manager.get_servico_by_id(servico_id)
+        
+        if not servico:
+            return jsonify({'error': 'Serviço não encontrado'}), 404
+        
+        # Formata datas para string
+        if servico.get('prazo_expiracao'):
+            servico['prazo_expiracao'] = str(servico['prazo_expiracao'])
+        if servico.get('data_limite_execucao'):
+            servico['data_limite_execucao'] = str(servico['data_limite_execucao'])
+        if servico.get('data_cadastro'):
+            servico['data_cadastro'] = str(servico['data_cadastro'])
+        
+        return jsonify(servico)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/servicos', methods=['POST'])
 def create_servico():
     """Cria um novo serviço"""
+    if not db_manager:
+        return jsonify({'error': 'Banco de dados não disponível'}), 500
+    
     data = request.json
     
     # Validação
@@ -215,42 +228,61 @@ def create_servico():
     if erros:
         return jsonify({'errors': erros}), 400
     
-    # Salva CSV
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    slug = safe_slug(data['titulo_servico'])
-    filename = f"{slug}_{timestamp}.csv"
-    filepath = os.path.join(CSV_DIR, filename)
-    
-    headers = [
-        'orgao_demandante', 'titulo_servico', 'tipo_atividade', 'especificacao_atividade',
-        'descricao_servico', 'outras_informacoes', 'endereco', 'numero', 'bairro',
-        'forma_pagamento', 'prazo_pagamento', 'prazo_expiracao', 'data_limite_execucao'
-    ]
-    
-    with open(filepath, 'w', encoding='utf-8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=headers)
-        writer.writeheader()
-        writer.writerow(data)
-    
-    # Salva no banco (se disponível)
-    if db_manager:
-        try:
-            service_id = db_manager.insert_servico(data)
-            if service_id:
-                print(f"✓ Serviço inserido no banco com ID: {service_id}")
-        except Exception as e:
-            print(f"✗ Erro ao salvar no banco: {e}")
-    
-    return jsonify({
-        'message': 'Serviço cadastrado com sucesso',
-        'filename': filename,
-        'data': data
-    }), 201
+    # Salva no banco de dados
+    try:
+        service_id = db_manager.insert_servico(data)
+        
+        if not service_id:
+            return jsonify({'error': 'Erro ao salvar serviço'}), 500
+        
+        print(f"✓ Serviço inserido no banco com ID: {service_id}")
+        
+        return jsonify({
+            'message': 'Serviço cadastrado com sucesso',
+            'id': service_id,
+            'data': data
+        }), 201
+        
+    except Exception as e:
+        print(f"✗ Erro ao salvar no banco: {e}")
+        return jsonify({'error': str(e)}), 500
 
-@app.route('/api/download/<path:filename>', methods=['GET'])
-def download_servico(filename):
-    """Download do CSV de um serviço"""
-    return send_from_directory(CSV_DIR, filename, as_attachment=True)
+@app.route('/api/servicos/<int:servico_id>/export', methods=['GET'])
+def export_servico_csv(servico_id):
+    """Exporta um serviço específico como CSV"""
+    if not db_manager:
+        return jsonify({'error': 'Banco de dados não disponível'}), 500
+    
+    try:
+        servico = db_manager.get_servico_by_id(servico_id)
+        
+        if not servico:
+            return jsonify({'error': 'Serviço não encontrado'}), 404
+        
+        # Cria CSV temporário
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        slug = safe_slug(servico['titulo_servico'])
+        filename = f"{slug}_{timestamp}.csv"
+        filepath = os.path.join(CSV_DIR, filename)
+        
+        # Garante que o diretório existe
+        os.makedirs(CSV_DIR, exist_ok=True)
+        
+        headers = [
+            'orgao_demandante', 'titulo_servico', 'tipo_atividade', 'especificacao_atividade',
+            'descricao_servico', 'outras_informacoes', 'endereco', 'numero', 'bairro',
+            'forma_pagamento', 'prazo_pagamento', 'prazo_expiracao', 'data_limite_execucao'
+        ]
+        
+        with open(filepath, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=headers)
+            writer.writeheader()
+            writer.writerow({k: servico.get(k, '') for k in headers})
+        
+        return send_from_directory(CSV_DIR, filename, as_attachment=True)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/auth/login', methods=['POST'])
 def login():
@@ -296,21 +328,27 @@ def check_auth():
         })
     return jsonify({'authenticated': False})
 
-@app.route('/api/admin/servicos/<path:filename>', methods=['DELETE'])
-def delete_servico(filename):
+@app.route('/api/admin/servicos/<int:servico_id>', methods=['DELETE'])
+def delete_servico(servico_id):
     """Deleta um serviço (apenas admin)"""
     if not session.get('logged_in'):
         return jsonify({'error': 'Não autorizado'}), 401
     
-    path = os.path.join(CSV_DIR, filename)
-    if os.path.isfile(path):
-        try:
-            os.remove(path)
-            return jsonify({'message': 'Serviço excluído com sucesso'})
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
+    if not db_manager:
+        return jsonify({'error': 'Banco de dados não disponível'}), 500
     
-    return jsonify({'error': 'Arquivo não encontrado'}), 404
+    try:
+        success = db_manager.delete_servico(servico_id)
+        
+        if success:
+            print(f"✓ Serviço {servico_id} deletado com sucesso")
+            return jsonify({'message': 'Serviço excluído com sucesso'})
+        else:
+            return jsonify({'error': 'Serviço não encontrado'}), 404
+            
+    except Exception as e:
+        print(f"✗ Erro ao deletar serviço: {e}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5010, debug=True)

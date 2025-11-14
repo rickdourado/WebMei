@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import logoOC from '../assets/OC.png';
 
 function Header({ title = "Portal Empreendedor", showAdmin = true, showLogout = false, onLogout }) {
   const navigate = useNavigate();
@@ -15,12 +16,12 @@ function Header({ title = "Portal Empreendedor", showAdmin = true, showLogout = 
     <header>
       <div className="header-content">
         <div className="logo-section">
-          <img 
-            src="/logo_ciclocarioca.png" 
-            alt="Ciclo Carioca" 
-            onError={(e) => e.target.style.display = 'none'}
+          <img
+            src={logoOC}
+            alt="Oportunidades Cariocas"
+            className="logo-oc"
           />
-          <h1 className="logo-title">Oportunidades Cariocas — {title}</h1>
+          <h1 className="logo-title">Serviços</h1>
         </div>
         <nav>
           <Link to="/" className="nav-link home-link" title="Página Inicial">

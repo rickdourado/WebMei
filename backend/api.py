@@ -5,7 +5,6 @@ import os
 import csv
 import bcrypt as bcrypt_lib
 from dotenv import load_dotenv
-from database import DatabaseManager
 
 # Carrega variáveis de ambiente
 load_dotenv()
@@ -16,8 +15,15 @@ app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
 # Configuração CORS para permitir requisições do React
 CORS(app, supports_credentials=True, origins=['http://localhost:3000', 'http://localhost:5173'])
 
-# Inicializa gerenciador de banco de dados
-db_manager = DatabaseManager()
+# Inicializa gerenciador de banco de dados (opcional)
+db_manager = None
+try:
+    from database import DatabaseManager
+    db_manager = DatabaseManager()
+    print("✓ Banco de dados MySQL conectado")
+except Exception as e:
+    print(f"⚠ Banco de dados não disponível: {e}")
+    print("⚠ Aplicação funcionará apenas com CSV")
 
 # Configurações de admin
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'admin')
@@ -84,10 +90,16 @@ def safe_slug(texto: str) -> str:
     return ''.join(ch for ch in texto if ch in permitidos)[:80] or 'vaga'
 
 def verify_admin_password(username, password):
-    user = db_manager.authenticate_user(username, password)
-    if user:
-        return user
+    # Tenta autenticar via banco de dados primeiro
+    if db_manager:
+        try:
+            user = db_manager.authenticate_user(username, password)
+            if user:
+                return user
+        except Exception as e:
+            print(f"⚠ Erro ao autenticar via banco: {e}")
     
+    # Fallback: autenticação via .env
     if username == ADMIN_USERNAME:
         if ADMIN_PASSWORD_HASH:
             try:
@@ -107,6 +119,25 @@ OCUPACAO_TO_SERVICOS = load_ocupacao_to_servicos(OCUPACAO_CSV)
 ORGAOS_OPCOES = load_orgaos()
 
 # ==================== ROTAS API ====================
+
+@app.route('/')
+def index():
+    """Rota raiz - informações da API"""
+    return jsonify({
+        'name': 'Portal Empreendedor API',
+        'version': '1.0.0',
+        'status': 'online',
+        'endpoints': {
+            'config': '/api/config',
+            'servicos': '/api/servicos',
+            'servico': '/api/servicos/<filename>',
+            'download': '/api/download/<filename>',
+            'login': '/api/auth/login',
+            'logout': '/api/auth/logout',
+            'check_auth': '/api/auth/check',
+            'delete': '/api/admin/servicos/<filename>'
+        }
+    })
 
 @app.route('/api/config', methods=['GET'])
 def get_config():
@@ -201,13 +232,14 @@ def create_servico():
         writer.writeheader()
         writer.writerow(data)
     
-    # Salva no banco
-    try:
-        service_id = db_manager.insert_servico(data)
-        if service_id:
-            print(f"✓ Serviço inserido no banco com ID: {service_id}")
-    except Exception as e:
-        print(f"✗ Erro ao salvar no banco: {e}")
+    # Salva no banco (se disponível)
+    if db_manager:
+        try:
+            service_id = db_manager.insert_servico(data)
+            if service_id:
+                print(f"✓ Serviço inserido no banco com ID: {service_id}")
+        except Exception as e:
+            print(f"✗ Erro ao salvar no banco: {e}")
     
     return jsonify({
         'message': 'Serviço cadastrado com sucesso',

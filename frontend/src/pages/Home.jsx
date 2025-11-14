@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
+import Header from '../components/Header';
 
 function Home() {
   const navigate = useNavigate();
@@ -72,16 +73,10 @@ function Home() {
 
   return (
     <div className="container">
-      <header>
-        <h1>Portal Empreendedor Unificado</h1>
-        <nav>
-          <a href="/vagas">Ver Vagas</a>
-          <a href="/admin/login">Admin</a>
-        </nav>
-      </header>
+      <Header title="Cadastro de Serviços MEI" />
 
       <main>
-        <h2>Cadastrar Nova Oportunidade</h2>
+        <h2 style={{ marginTop: 0, marginBottom: '16px' }}>Cadastrar Nova Oportunidade</h2>
 
         {message && (
           <div className={`message ${message.type}`}>

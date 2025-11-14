@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/api';
+import Header from '../components/Header';
 
 function Vagas() {
   const [vagas, setVagas] = useState([]);
@@ -25,15 +26,10 @@ function Vagas() {
 
   return (
     <div className="container">
-      <header>
-        <h1>Oportunidades Disponíveis</h1>
-        <nav>
-          <Link to="/">Cadastrar Nova</Link>
-          <Link to="/admin/login">Admin</Link>
-        </nav>
-      </header>
+      <Header title="Vagas MEI" />
 
       <main>
+        <h2 style={{ marginTop: 0, marginBottom: '16px' }}>Vagas cadastradas</h2>
         <div className="vagas-grid">
           {vagas.length === 0 ? (
             <p>Nenhuma vaga cadastrada ainda.</p>

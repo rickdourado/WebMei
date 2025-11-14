@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
+import Header from '../components/Header';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -61,17 +62,15 @@ function AdminDashboard() {
 
   return (
     <div className="container">
-      <header>
-        <h1>Painel Administrativo</h1>
-        <nav>
-          <span>Olá, {user?.username}</span>
-          <Link to="/">Início</Link>
-          <button onClick={handleLogout} className="btn-logout">Sair</button>
-        </nav>
-      </header>
+      <Header 
+        title={`Admin — Olá, ${user?.username || 'Admin'}`} 
+        showAdmin={false}
+        showLogout={true}
+        onLogout={handleLogout}
+      />
 
       <main>
-        <h2>Vagas Cadastradas ({vagas.length})</h2>
+        <h2 style={{ marginTop: 0, marginBottom: '16px' }}>Vagas Cadastradas ({vagas.length})</h2>
 
         <div className="admin-table">
           {vagas.length === 0 ? (

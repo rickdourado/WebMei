@@ -1,0 +1,2 @@
+orgao_demandante,titulo_servico,tipo_atividade,especificacao_atividade,descricao_servico,outras_informacoes,endereco,numero,bairro,forma_pagamento,prazo_pagamento,prazo_expiracao,data_limite_execucao
+Companhia Carioca de Parcerias e Investimentos - CCPAR,Teste crud react,ELETRICISTA,LAUDOS E VISTORIAS ELÉTRICAS,Testando serviço de crud react,Teste teste,RUa do lavradio,19,Gamboa,Dinheiro,40 MESES,2025-11-25,2026-01-14

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
+import Header from '../components/Header';
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -29,16 +30,19 @@ function AdminLogin() {
 
   return (
     <div className="container">
-      <div className="login-box">
-        <h1>Login Administrativo</h1>
+      <Header title="Admin MEI" showAdmin={false} />
+      
+      <main>
+        <h2 style={{ marginTop: 0, marginBottom: '16px' }}>Login</h2>
         
         {error && <div className="message error">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Usuário</label>
+        <form onSubmit={handleSubmit} className="form-grid" style={{ maxWidth: '420px' }}>
+          <div className="form-group full">
+            <label htmlFor="username">Usuário</label>
             <input
               type="text"
+              id="username"
               name="username"
               value={formData.username}
               onChange={handleChange}
@@ -46,10 +50,11 @@ function AdminLogin() {
             />
           </div>
 
-          <div className="form-group">
-            <label>Senha</label>
+          <div className="form-group full">
+            <label htmlFor="password">Senha</label>
             <input
               type="password"
+              id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
@@ -57,13 +62,13 @@ function AdminLogin() {
             />
           </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
+          <div className="form-actions full">
+            <button type="submit" disabled={loading}>
+              {loading ? 'Entrando...' : 'Entrar'}
+            </button>
+          </div>
         </form>
-
-        <a href="/" className="back-link">Voltar ao início</a>
-      </div>
+      </main>
     </div>
   );
 }

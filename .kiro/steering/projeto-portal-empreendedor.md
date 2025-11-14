@@ -5,11 +5,12 @@ Este é um sistema web Flask para cadastro e gerenciamento de oportunidades de s
 
 **SEMPRE** utilize o Ambiente de desenvolvimento : usando o comando conda activate ciclo, a cada prompt.
 **SEMPRE** Armazene scripts na pasta scripts
+**SEMPRE** Armazene os documentos de mudanças na pasa 'docs'
 
 ## Arquitetura e Tecnologias
 - **Backend**: Flask (Python)
-- **Frontend**: HTML/CSS/JavaScript com templates Jinja2
-- **Armazenamento**: Arquivos CSV (sem banco de dados)
+- **Frontend**: React
+- **Armazenamento**: Arquivos CSV + banco de dados MySQL
 - **Autenticação**: Sessões Flask simples para área administrativa
 
 ## Estrutura de Dados

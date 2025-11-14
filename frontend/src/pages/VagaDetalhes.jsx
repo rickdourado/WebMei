@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
+import Header from '../components/Header';
 
 function VagaDetalhes() {
   const { filename } = useParams();
@@ -27,12 +28,7 @@ function VagaDetalhes() {
 
   return (
     <div className="container">
-      <header>
-        <h1>Detalhes da Oportunidade</h1>
-        <nav>
-          <Link to="/vagas">Voltar</Link>
-        </nav>
-      </header>
+      <Header title="Detalhes da Vaga" />
 
       <main>
         <div className="vaga-detalhes">

@@ -1,287 +1,262 @@
 # 📚 Documentação - Portal Empreendedor Unificado
 
-**Versão Atual**: 2.0  
-**Última Atualização**: 14/11/2025
+Bem-vindo à documentação completa do Portal Empreendedor! Esta documentação está organizada em seções numeradas para facilitar a navegação.
 
 ---
 
-## 🎯 Início Rápido
+## 🚀 Início Rápido
 
-### Para Desenvolvedores Novos
+Novo no projeto? Comece aqui:
 
-1. **[ESTRUTURA-PROJETO.md](ESTRUTURA-PROJETO.md)** - Entenda a estrutura do projeto
-2. **[estrutura-mysql.md](estrutura-mysql.md)** - Estrutura do banco de dados
-3. **[TESTE-RAPIDO-V2.md](TESTE-RAPIDO-V2.md)** - Teste o sistema rapidamente
-
-### Para Migração v1.x → v2.0
-
-1. **[analise-duplicacao-csv-banco.md](analise-duplicacao-csv-banco.md)** - Entenda o problema
-2. **[CHANGELOG-v2.0.md](CHANGELOG-v2.0.md)** - Veja todas as mudanças
-3. **[INSTRUCOES-MIGRACAO.md](INSTRUCOES-MIGRACAO.md)** - Guia passo a passo
-4. **[RESUMO-MUDANCAS.md](RESUMO-MUDANCAS.md)** - Resumo visual
+1. **[Instalação Rápida](01-inicio/INSTALACAO-RAPIDA.md)** - Configure o ambiente em minutos
+2. **[Guia Rápido React](01-inicio/GUIA-RAPIDO-REACT.md)** - Entenda a arquitetura React
+3. **[Estrutura do Projeto](01-inicio/ESTRUTURA-PROJETO.md)** - Conheça a organização dos arquivos
 
 ---
 
 ## 📖 Índice Completo
 
-### 🏗️ Arquitetura e Estrutura
+### 01. 🎯 Início
+Documentação essencial para começar
 
-| Documento | Descrição | Público |
-|-----------|-----------|---------|
-| [ESTRUTURA-PROJETO.md](ESTRUTURA-PROJETO.md) | Estrutura completa do projeto | Todos |
-| [estrutura-mysql.md](estrutura-mysql.md) | Schema do banco de dados MySQL | Desenvolvedores |
-| [deploy-pythonanywhere.md](deploy-pythonanywhere.md) | Guia de deploy no PythonAnywhere | DevOps |
+- **[Instalação Rápida](01-inicio/INSTALACAO-RAPIDA.md)**
+  - Requisitos do sistema
+  - Instalação de dependências
+  - Configuração inicial
+  - Primeiro acesso
 
-### 🔄 Migração v2.0
+- **[Guia Rápido React](01-inicio/GUIA-RAPIDO-REACT.md)**
+  - Arquitetura frontend
+  - Componentes principais
+  - Rotas e navegação
+  - API integration
 
-| Documento | Descrição | Público |
-|-----------|-----------|---------|
-| [analise-duplicacao-csv-banco.md](analise-duplicacao-csv-banco.md) | Análise do problema de duplicação | Todos |
-| [CHANGELOG-v2.0.md](CHANGELOG-v2.0.md) | Changelog completo da v2.0 | Desenvolvedores |
-| [INSTRUCOES-MIGRACAO.md](INSTRUCOES-MIGRACAO.md) | Instruções de migração | DevOps |
-| [RESUMO-MUDANCAS.md](RESUMO-MUDANCAS.md) | Resumo visual das mudanças | Todos |
-
-### 🧪 Testes
-
-| Documento | Descrição | Público |
-|-----------|-----------|---------|
-| [TESTE-RAPIDO.md](TESTE-RAPIDO.md) | Testes rápidos v1.x (legado) | Referência |
-| [TESTE-RAPIDO-V2.md](TESTE-RAPIDO-V2.md) | Testes rápidos v2.0 | Desenvolvedores |
-
-### ✨ Features e Implementações
-
-| Documento | Descrição | Público |
-|-----------|-----------|---------|
-| [dropdown-orgaos-demandantes.md](dropdown-orgaos-demandantes.md) | Implementação do dropdown de órgãos | Desenvolvedores |
+- **[Estrutura do Projeto](01-inicio/ESTRUTURA-PROJETO.md)**
+  - Organização de pastas
+  - Convenções de código
+  - Padrões adotados
+  - Boas práticas
 
 ---
 
-## 🚀 Guias por Cenário
+### 02. 💻 Desenvolvimento
+Guias para desenvolvedores
 
-### Cenário 1: Novo Desenvolvedor
+- **[Identidade Visual](02-desenvolvimento/IDENTIDADE-VISUAL.md)**
+  - Paleta de cores
+  - Tipografia
+  - Componentes UI
+  - Guidelines de design
 
-**Objetivo**: Entender e rodar o projeto
+- **[Estrutura de Templates](02-desenvolvimento/TEMPLATES-ESTRUTURA.md)**
+  - Templates Jinja2
+  - Componentes reutilizáveis
+  - Layouts base
+  - Herança de templates
 
-```
-1. Leia: ESTRUTURA-PROJETO.md
-2. Leia: estrutura-mysql.md
-3. Configure o ambiente (veja .env.example)
-4. Execute: python scripts/migrar_csv_para_banco.py
-5. Teste: TESTE-RAPIDO-V2.md
-```
-
-### Cenário 2: Migração de v1.x para v2.0
-
-**Objetivo**: Atualizar sistema existente
-
-```
-1. Leia: analise-duplicacao-csv-banco.md
-2. Leia: CHANGELOG-v2.0.md
-3. Leia: RESUMO-MUDANCAS.md
-4. Siga: INSTRUCOES-MIGRACAO.md
-5. Teste: TESTE-RAPIDO-V2.md
-```
-
-### Cenário 3: Deploy em Produção
-
-**Objetivo**: Colocar sistema no ar
-
-```
-1. Leia: deploy-pythonanywhere.md
-2. Configure banco de dados
-3. Execute migração de dados
-4. Configure variáveis de ambiente
-5. Teste todas as funcionalidades
-```
-
-### Cenário 4: Adicionar Nova Feature
-
-**Objetivo**: Implementar funcionalidade
-
-```
-1. Revise: ESTRUTURA-PROJETO.md
-2. Revise: estrutura-mysql.md
-3. Implemente no backend (database.py + api.py)
-4. Implemente no frontend
-5. Documente a mudança
-6. Adicione testes
-```
+- **[Estrutura MySQL](02-desenvolvimento/estrutura-mysql.md)**
+  - Schema do banco
+  - Tabelas e relacionamentos
+  - Índices e otimizações
+  - Queries comuns
 
 ---
 
-## 📊 Versões
+### 03. ⚡ Features
+Documentação de funcionalidades específicas
 
-### v2.0 (Atual) - 14/11/2025
+- **[Dropdown de Órgãos Demandantes](03-features/dropdown-orgaos-demandantes.md)**
+  - Implementação
+  - Fonte de dados
+  - Atualização dinâmica
 
-**Mudanças principais**:
-- ✅ Banco de dados como fonte única
-- ✅ Eliminação de redundância CSV
-- ✅ IDs numéricos ao invés de filenames
-- ✅ Export CSV sob demanda
-- ⚠️ Breaking changes na API
+- **[Campo Número Corrigido](03-features/campo-numero-corrigido.md)**
+  - Validação de endereços
+  - Suporte a "S/N"
+  - Tratamento de erros
 
-**Documentos**:
-- [CHANGELOG-v2.0.md](CHANGELOG-v2.0.md)
-- [INSTRUCOES-MIGRACAO.md](INSTRUCOES-MIGRACAO.md)
-- [RESUMO-MUDANCAS.md](RESUMO-MUDANCAS.md)
+- **[Campo Prazo Expiração com Calendário](03-features/campo-prazo-expiracao-calendario.md)**
+  - Date picker
+  - Validação de datas
+  - Formato brasileiro
 
-### v1.x (Legado)
+- **[Integração Formulário MySQL](03-features/integracao-formulario-mysql.md)**
+  - Fluxo de dados
+  - Validações
+  - Persistência
 
-**Características**:
-- Salvamento em CSV + Banco
-- Leitura apenas de CSV
-- Filenames como identificadores
-
-**Documentos**:
-- [TESTE-RAPIDO.md](TESTE-RAPIDO.md) (referência)
-
----
-
-## 🔧 Tecnologias
-
-### Backend
-- **Flask** - Framework web Python
-- **MySQL** - Banco de dados
-- **PyMySQL** - Driver MySQL
-- **bcrypt** - Hash de senhas
-- **python-dotenv** - Variáveis de ambiente
-
-### Frontend
-- **React** - Biblioteca UI
-- **Vite** - Build tool
-- **React Router** - Roteamento
-- **Axios** - Cliente HTTP
-
-### DevOps
-- **Conda** - Gerenciador de ambientes
-- **Git** - Controle de versão
-- **PythonAnywhere** - Hospedagem (opcional)
+#### Hash de Senhas
+- **[Como Funciona Hash Bcrypt](03-features/hash-senhas/como-funciona-hash-bcrypt.md)**
+- **[Explicação de Hash de Senhas](03-features/hash-senhas/hash-senhas-explicacao.md)**
+- **[Migração de Senhas para Hash](03-features/hash-senhas/migracao-senhas-hash.md)**
 
 ---
 
-## 📁 Estrutura de Arquivos
+### 04. 🔄 Migração
+Documentação sobre migrações do sistema
 
-```
-docs/
-├── README.md                              ← Você está aqui
-├── ESTRUTURA-PROJETO.md                   ← Estrutura do projeto
-├── estrutura-mysql.md                     ← Schema do banco
-├── deploy-pythonanywhere.md               ← Deploy
-├── analise-duplicacao-csv-banco.md        ← Análise v2.0
-├── CHANGELOG-v2.0.md                      ← Changelog v2.0
-├── INSTRUCOES-MIGRACAO.md                 ← Migração v2.0
-├── RESUMO-MUDANCAS.md                     ← Resumo v2.0
-├── TESTE-RAPIDO.md                        ← Testes v1.x
-├── TESTE-RAPIDO-V2.md                     ← Testes v2.0
-└── dropdown-orgaos-demandantes.md         ← Feature dropdown
-```
+- **[Resumo da Migração](04-migracao/RESUMO-MIGRACAO.md)**
+  - Visão geral
+  - Motivação
+  - Resultados alcançados
+
+- **[Instruções de Migração](04-migracao/INSTRUCOES-MIGRACAO.md)**
+  - Passo a passo
+  - Checklist
+  - Troubleshooting
+
+- **[Comparação de Versões](04-migracao/COMPARACAO-VERSOES.md)**
+  - Flask vs React
+  - CSV vs MySQL
+  - Antes e depois
+
+- **[Análise Duplicação CSV/Banco](04-migracao/analise-duplicacao-csv-banco.md)**
+  - Problema identificado
+  - Análise técnica
+  - Solução proposta
+
+- **[README React](04-migracao/README-REACT.md)**
+  - Migração para React
+  - Arquitetura SPA
+  - API REST
 
 ---
 
-## 🎯 Roadmap
+### 05. 📝 Versões e Changelogs
+Histórico de mudanças
 
-### Concluído ✅
-- [x] Sistema básico de cadastro
-- [x] Autenticação admin
-- [x] Dropdown de órgãos
-- [x] Integração com MySQL
-- [x] Migração para banco como fonte única
-- [x] Export CSV sob demanda
+- **[Changelog v2.0](05-versoes/CHANGELOG-v2.0.md)**
+  - Breaking changes
+  - Novas features
+  - Melhorias
 
-### Em Desenvolvimento 🚧
-- [ ] Atualização do frontend React
-- [ ] Atualização dos templates HTML
-- [ ] Testes automatizados
+- **[Implementação Completa](05-versoes/IMPLEMENTACAO-COMPLETA.md)**
+  - Detalhes técnicos
+  - Estatísticas
+  - Checklist
 
-### Planejado 📋
-- [ ] Paginação
-- [ ] Filtros e busca
-- [ ] Edição de serviços
-- [ ] Histórico de alterações
-- [ ] Dashboard com estatísticas
-- [ ] API de notificações
-- [ ] Sistema de permissões
+#### Changelogs Diários
+- **[14/11/2025](05-versoes/changelogs/2025-11-14.md)** - Correção backend listagem
+- **[15/11/2025](05-versoes/changelogs/2025-11-15.md)** - Correção frontend React
+
+---
+
+### 06. 🚀 Deploy
+Documentação de implantação
+
+- **[Deploy PythonAnywhere](06-deploy/deploy-pythonanywhere.md)**
+  - Configuração do servidor
+  - Deploy do backend
+  - Deploy do frontend
+  - Configuração de domínio
+
+---
+
+### 07. 📊 Estado Atual
+Documentação do estado atual do projeto
+
+- **[Resumo de Mudanças](07-atual/RESUMO-MUDANCAS.md)** ⭐
+  - Última atualização: 15/11/2025
+  - Status dos servidores
+  - Funcionalidades implementadas
+  - Próximos passos
+
+---
+
+## 🔍 Busca Rápida
+
+### Por Tópico
+
+- **Instalação**: [01-inicio/INSTALACAO-RAPIDA.md](01-inicio/INSTALACAO-RAPIDA.md)
+- **React**: [01-inicio/GUIA-RAPIDO-REACT.md](01-inicio/GUIA-RAPIDO-REACT.md)
+- **MySQL**: [02-desenvolvimento/estrutura-mysql.md](02-desenvolvimento/estrutura-mysql.md)
+- **Deploy**: [06-deploy/deploy-pythonanywhere.md](06-deploy/deploy-pythonanywhere.md)
+- **Migração**: [04-migracao/RESUMO-MIGRACAO.md](04-migracao/RESUMO-MIGRACAO.md)
+- **Changelog**: [05-versoes/CHANGELOG-v2.0.md](05-versoes/CHANGELOG-v2.0.md)
+- **Estado Atual**: [07-atual/RESUMO-MUDANCAS.md](07-atual/RESUMO-MUDANCAS.md) ⭐
+
+### Por Tipo
+
+- **Guias**: 01-inicio/, 02-desenvolvimento/
+- **Features**: 03-features/
+- **Histórico**: 05-versoes/
+- **Operações**: 06-deploy/
+
+---
+
+## 📌 Documentos Importantes
+
+### Para Novos Desenvolvedores
+1. [Instalação Rápida](01-inicio/INSTALACAO-RAPIDA.md)
+2. [Estrutura do Projeto](01-inicio/ESTRUTURA-PROJETO.md)
+3. [Guia Rápido React](01-inicio/GUIA-RAPIDO-REACT.md)
+
+### Para Manutenção
+1. [Resumo de Mudanças](07-atual/RESUMO-MUDANCAS.md) ⭐
+2. [Estrutura MySQL](02-desenvolvimento/estrutura-mysql.md)
+3. [Changelog v2.0](05-versoes/CHANGELOG-v2.0.md)
+
+### Para Deploy
+1. [Deploy PythonAnywhere](06-deploy/deploy-pythonanywhere.md)
+2. [Instruções de Migração](04-migracao/INSTRUCOES-MIGRACAO.md)
+
+---
+
+## 🆘 Precisa de Ajuda?
+
+### Problemas Comuns
+
+**Servidor não inicia?**
+→ Veja [Instalação Rápida](01-inicio/INSTALACAO-RAPIDA.md)
+
+**Erro no banco de dados?**
+→ Veja [Estrutura MySQL](02-desenvolvimento/estrutura-mysql.md)
+
+**Frontend não conecta?**
+→ Veja [Guia Rápido React](01-inicio/GUIA-RAPIDO-REACT.md)
+
+**Migração de dados?**
+→ Veja [Instruções de Migração](04-migracao/INSTRUCOES-MIGRACAO.md)
+
+---
+
+## 📊 Estatísticas da Documentação
+
+- **Total de documentos**: 24
+- **Seções**: 7
+- **Última atualização**: 15/11/2025
+- **Versão do projeto**: 2.0
 
 ---
 
 ## 🤝 Contribuindo
 
-### Padrões de Código
+Para adicionar ou atualizar documentação:
 
-1. **Python**: PEP 8
-2. **JavaScript**: ESLint
-3. **Commits**: Conventional Commits
-4. **Branches**: GitFlow
+1. Identifique a seção apropriada (01-07)
+2. Crie/edite o arquivo markdown
+3. Atualize este README se necessário
+4. Faça commit com mensagem descritiva
 
-### Processo
+### Convenções
 
-1. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-2. Implemente a funcionalidade
-3. Adicione testes
-4. Atualize a documentação
-5. Faça commit: `git commit -m "feat: adiciona nova funcionalidade"`
-6. Push: `git push origin feature/nova-funcionalidade`
-7. Abra um Pull Request
-
-### Documentação
-
-Ao adicionar features:
-1. Atualize `ESTRUTURA-PROJETO.md` se necessário
-2. Crie documento específico em `docs/`
-3. Atualize este README.md
-4. Adicione exemplos de uso
+- Use markdown padrão
+- Adicione emojis para melhor visualização
+- Mantenha linguagem clara e objetiva
+- Inclua exemplos de código quando relevante
+- Atualize o índice deste README
 
 ---
 
-## 📞 Suporte
+## 📅 Histórico de Reorganização
 
-### Problemas Comuns
-
-1. **Banco não conecta**: Verifique `.env` e MySQL
-2. **API não responde**: Verifique se o backend está rodando
-3. **Frontend não carrega**: Verifique se o Vite está rodando
-4. **Erro 401**: Faça login primeiro
-
-### Recursos
-
-- **Documentação**: `docs/`
-- **Issues**: GitHub Issues
-- **Logs**: Console do servidor
+- **15/11/2025**: Reorganização completa da documentação
+  - Criada estrutura de 7 seções
+  - 24 documentos organizados
+  - Novo README criado
 
 ---
 
-## 📜 Licença
-
-[Adicionar informações de licença]
-
----
-
-## 👥 Equipe
-
-[Adicionar informações da equipe]
-
----
-
-## 📝 Notas de Versão
-
-### v2.0.0 - 14/11/2025
-
-**Breaking Changes**:
-- Sistema agora requer MySQL
-- Endpoints usam IDs ao invés de filenames
-- CSVs gerados sob demanda
-
-**Melhorias**:
-- Performance 3x melhor
-- Consistência de dados garantida
-- Código mais limpo e manutenível
-
-**Migração**:
-- Siga `INSTRUCOES-MIGRACAO.md`
-- Execute `scripts/migrar_csv_para_banco.py`
-- Atualize frontend conforme `CHANGELOG-v2.0.md`
-
----
-
-**Última atualização**: 14/11/2025  
-**Versão da documentação**: 2.0
+**Última atualização**: 15/11/2025  
+**Versão da documentação**: 2.0  
+**Mantido por**: Equipe Portal Empreendedor

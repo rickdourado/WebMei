@@ -45,7 +45,7 @@
             </ul>
         </div>
         <div class="form-actions">
-            <a href="{{ url_for('download_file', filename=csv_file) }}" class="btn">Baixar CSV</a>
+            <a href="{{ url_for('download_file', servico_id=service_id) }}" class="btn">Baixar CSV</a>
             <a href="{{ url_for('vagas_public') }}" class="btn">Ver vagas</a>
             <a href="{{ url_for('index') }}" class="btn">Cadastrar outro serviço</a>
         </div>

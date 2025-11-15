@@ -51,9 +51,9 @@
                         <div>{{ v.tipo_atividade }}</div>
                         <div>{{ v.bairro }}</div>
                         <div style="display:flex;gap:8px;flex-wrap:wrap">
-                            <a class="btn" href="{{ url_for('vaga_view', filename=v.arquivo) }}">Ver</a>
-                            <a class="btn" href="{{ url_for('download_file', filename=v.arquivo) }}">CSV</a>
-                            <form method="post" action="{{ url_for('admin_delete', filename=v.arquivo) }}" onsubmit="return confirm('Excluir esta vaga?');">
+                            <a class="btn" href="{{ url_for('vaga_view', servico_id=v.id) }}">Ver</a>
+                            <a class="btn" href="{{ url_for('download_file', servico_id=v.id) }}">CSV</a>
+                            <form method="post" action="{{ url_for('admin_delete', servico_id=v.id) }}" onsubmit="return confirm('Excluir esta vaga?');">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                 <button class="btn" type="submit">Excluir</button>
                             </form>

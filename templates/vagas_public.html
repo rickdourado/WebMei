@@ -40,8 +40,8 @@
                         <div>{{ v.tipo_atividade }}</div>
                         <div>{{ v.bairro }}</div>
                         <div style="display:flex;gap:8px;flex-wrap:wrap">
-                            <a class="btn" href="{{ url_for('vaga_view', filename=v.arquivo) }}">Ver</a>
-                            <a class="btn" href="{{ url_for('download_file', filename=v.arquivo) }}">CSV</a>
+                            <a class="btn" href="{{ url_for('vaga_view', servico_id=v.id) }}">Ver</a>
+                            <a class="btn" href="{{ url_for('download_file', servico_id=v.id) }}">CSV</a>
                         </div>
                     {% endfor %}
                 </div>

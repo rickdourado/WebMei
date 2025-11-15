@@ -5,7 +5,10 @@ Este é um sistema web Flask para cadastro e gerenciamento de oportunidades de s
 
 **SEMPRE** utilize o Ambiente de desenvolvimento : usando o comando conda activate ciclo, a cada prompt.
 **SEMPRE** Armazene scripts na pasta scripts
-**SEMPRE** Armazene os documentos de mudanças na pasa 'docs'
+**SEMPRE** Armazene os documentos de mudanças na pasa 'docs'. Nomeie os documentos esse formato: 'AAAAMMDD - TituloDoDocumento'.md
+**SEMPRE** Armazene as alterações diárias em um arquivo na pasta 'docs/changelogs', no formato AAAA-MM-DD.MD. 
+**SEMPRE** QUe criar um script de testes, delete-o após seu uso, para evitar acumulo de scripts.
+
 
 ## Arquitetura e Tecnologias
 - **Backend**: Flask (Python)

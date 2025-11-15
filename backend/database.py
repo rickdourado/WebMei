@@ -203,9 +203,9 @@ class DatabaseManager:
                         id, orgao_demandante, titulo_servico, tipo_atividade,
                         especificacao_atividade, descricao_servico, outras_informacoes,
                         endereco, numero, bairro, forma_pagamento, prazo_pagamento,
-                        prazo_expiracao, data_limite_execucao, data_cadastro
-                    FROM servicos_mei
-                    ORDER BY data_cadastro DESC
+                        prazo_expiracao, data_limite_execucao, data_criacao
+                    FROM servicos_mei WHERE ativo = 1
+                    ORDER BY data_criacao DESC
                 """
                 
                 if limit:
@@ -240,9 +240,9 @@ class DatabaseManager:
                         id, orgao_demandante, titulo_servico, tipo_atividade,
                         especificacao_atividade, descricao_servico, outras_informacoes,
                         endereco, numero, bairro, forma_pagamento, prazo_pagamento,
-                        prazo_expiracao, data_limite_execucao, data_cadastro
+                        prazo_expiracao, data_limite_execucao, data_criacao
                     FROM servicos_mei
-                    WHERE id = %s
+                    WHERE ativo = 1 AND id = %s
                 """
                 
                 cursor.execute(sql, (servico_id,))

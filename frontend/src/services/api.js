@@ -16,10 +16,10 @@ export const apiService = {
 
   // Serviços
   getServicos: () => api.get('/servicos'),
-  getServico: (filename) => api.get(`/servicos/${filename}`),
+  getServico: (servicoId) => api.get(`/servicos/${servicoId}`),
   createServico: (data) => api.post('/servicos', data),
-  deleteServico: (filename) => api.delete(`/admin/servicos/${filename}`),
-  downloadServico: (filename) => `${API_BASE_URL}/download/${filename}`,
+  deleteServico: (servicoId) => api.delete(`/admin/servicos/${servicoId}`),
+  downloadServico: (servicoId) => `${API_BASE_URL}/servicos/${servicoId}/export`,
 
   // Autenticação
   login: (username, password) => api.post('/auth/login', { username, password }),

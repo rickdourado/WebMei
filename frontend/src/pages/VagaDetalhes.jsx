@@ -5,16 +5,17 @@ import Header from '../components/Header';
 
 function VagaDetalhes() {
   const { filename } = useParams();
+  const servicoId = filename; // Mantém compatibilidade com rota, mas agora é ID
   const [vaga, setVaga] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadVaga();
-  }, [filename]);
+  }, [servicoId]);
 
   const loadVaga = async () => {
     try {
-      const response = await apiService.getServico(filename);
+      const response = await apiService.getServico(servicoId);
       setVaga(response.data);
     } catch (error) {
       console.error('Erro ao carregar vaga:', error);
@@ -87,7 +88,7 @@ function VagaDetalhes() {
           </div>
 
           <a 
-            href={apiService.downloadServico(filename)} 
+            href={apiService.downloadServico(servicoId)} 
             className="btn-download"
             download
           >

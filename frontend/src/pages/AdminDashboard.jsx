@@ -38,12 +38,12 @@ function AdminDashboard() {
     }
   };
 
-  const handleDelete = async (filename) => {
+  const handleDelete = async (servicoId) => {
     if (!confirm('Tem certeza que deseja excluir esta vaga?')) return;
 
     try {
-      await apiService.deleteServico(filename);
-      setVagas(vagas.filter(v => v.arquivo !== filename));
+      await apiService.deleteServico(servicoId);
+      setVagas(vagas.filter(v => v.id !== servicoId));
     } catch (error) {
       alert('Erro ao excluir vaga');
     }
@@ -88,15 +88,15 @@ function AdminDashboard() {
               </thead>
               <tbody>
                 {vagas.map(vaga => (
-                  <tr key={vaga.arquivo}>
+                  <tr key={vaga.id}>
                     <td>{vaga.titulo_servico}</td>
                     <td>{vaga.tipo_atividade}</td>
                     <td>{vaga.bairro}</td>
                     <td>{vaga.prazo_expiracao}</td>
                     <td>
-                      <Link to={`/vaga/${vaga.arquivo}`} className="btn-view">Ver</Link>
+                      <Link to={`/vaga/${vaga.id}`} className="btn-view">Ver</Link>
                       <button 
-                        onClick={() => handleDelete(vaga.arquivo)} 
+                        onClick={() => handleDelete(vaga.id)} 
                         className="btn-delete"
                       >
                         Excluir

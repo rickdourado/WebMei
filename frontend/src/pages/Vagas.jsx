@@ -35,12 +35,12 @@ function Vagas() {
             <p>Nenhuma vaga cadastrada ainda.</p>
           ) : (
             vagas.map(vaga => (
-              <div key={vaga.arquivo} className="vaga-card">
+              <div key={vaga.id} className="vaga-card">
                 <h3>{vaga.titulo_servico}</h3>
                 <p><strong>Tipo:</strong> {vaga.tipo_atividade}</p>
                 <p><strong>Bairro:</strong> {vaga.bairro}</p>
                 <p><strong>Expira em:</strong> {vaga.prazo_expiracao}</p>
-                <Link to={`/vaga/${vaga.arquivo}`} className="btn-detalhes">
+                <Link to={`/vaga/${vaga.id}`} className="btn-detalhes">
                   Ver Detalhes
                 </Link>
               </div>

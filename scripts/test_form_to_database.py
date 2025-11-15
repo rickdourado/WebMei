@@ -95,8 +95,7 @@ def insert_test_service():
         'forma_pagamento': 'Transferência',
         'prazo_pagamento': '30 dias após conclusão',
         'prazo_expiracao': (datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d'),
-        'data_limite_execucao': (datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d'),
-        'arquivo_csv': f'teste_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        'data_limite_execucao': (datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d')
     }
     
     print("\nDados do serviço de teste:")
@@ -114,12 +113,12 @@ def insert_test_service():
                     orgao_demandante, titulo_servico, tipo_atividade, 
                     especificacao_atividade, descricao_servico, outras_informacoes,
                     endereco, numero, bairro, forma_pagamento, prazo_pagamento,
-                    prazo_expiracao, data_limite_execucao, arquivo_csv
+                    prazo_expiracao, data_limite_execucao
                 ) VALUES (
                     %(orgao_demandante)s, %(titulo_servico)s, %(tipo_atividade)s,
                     %(especificacao_atividade)s, %(descricao_servico)s, %(outras_informacoes)s,
                     %(endereco)s, %(numero)s, %(bairro)s, %(forma_pagamento)s, %(prazo_pagamento)s,
-                    %(prazo_expiracao)s, %(data_limite_execucao)s, %(arquivo_csv)s
+                    %(prazo_expiracao)s, %(data_limite_execucao)s
                 )
             """
             
